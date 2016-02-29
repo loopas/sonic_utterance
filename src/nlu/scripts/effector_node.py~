@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+import rospy, mido, time, random, vocal
+from nlu.msg import midi, midiNote, midiCC
+from mido import Message
+
+
+# Recieve msgs from control node
+
+def callback(data = []):
+
+    global voc, cn, n, vel, ccc, ctrl, val
+    voc = data.vocal
+    cn = data.note.channel
+    n = data.note.note
+    vel = data.note.velocity
+    ccc = data.control.channel
+    ctrl = data.control.control
+    val = data.control.value
+
+    rospy.loginfo("%s", voc)
+    print " "
+
+    rospy.loginfo("Note")
+    rospy.loginfo("Channel: %d", cn)
+    rospy.loginfo("Note: %d", n)
+    rospy.loginfo("Velocity: %d", vel)
+    print " "
+
+    rospy.loginfo("CC")
+    rospy.loginfo("Channel: " + str(ccc))
+    rospy.loginfo("Control: " + str(ctrl))
+    rospy.loginfo("Value: " + str(val))
+    print " "
+   
+    '''# Open default outport
+
+    outport = mido.open_output()
+
+    # Create messages and CC
+
+    message = Message('note_on', channel = cn, note = n, velocity = vel)
+    #dispoff = Message('note_off', channel = cn, note = n, velocity = vel)
+
+	# Knobs of Ableton
+
+    knob_control = Message('control_change', channel = ccc, control = ctrl, value = val)
+    
+    # Send messages and CC from the msgs recieved
+    
+    outport.send(message)
+    outport.send(knob_control)
+
+    # Close default outport
+
+    outport.close()'''
+ 
+def effector():
+    rospy.init_node('effector', anonymous=True)
+    rospy.Subscriber('link', midi, callback)
+    rospy.spin() # Keeps python from exiting until this node is stopped
+    
+
+if __name__ == '__main__':
+    effector()
+
+
+
+

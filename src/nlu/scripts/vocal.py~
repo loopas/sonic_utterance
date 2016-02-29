@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+
+import rospy, decimal
+import numpy as np
+
+class Value():
+	def __init__(self, name, notechannel, notenote, notevelocity, ccchannel = [], cccontrol = [], ccvalue = []):
+		self.name = name       		
+		self.notechannel = notechannel
+		self.notenote = notenote
+		self.notevelocity = notevelocity
+		self.ccchannel = ccchannel
+		self.cccontrol = cccontrol
+		self.ccvalue = ccvalue
+
+
+class Rangeparams():
+	def __init__(self, stream_data, num_intervals, num_params, inf_val = [], sup_val = []):# Insert first the values of the input intervals
+		self.stream_data = stream_data		
+		self.num_intervals = num_intervals
+		self.num_params = num_params
+		self.inf_val = inf_val
+		self.sup_val = sup_val
+	
+	def get_Pout(self):
+		I = [0 for rows in range(self.num_intervals)]
+		for i in range(self.num_intervals):
+			I[i] = np.linspace(self.inf_val[i], self.sup_val[i], np.round(self.sup_val[i] - self.inf_val[i], 1)*10**(abs(decimal.Decimal(str(self.sup_val[i] - self.inf_val[i])).as_tuple().exponent)) + 1)
+		print "I:", I
+		Pinp = [[0 for columns in range(self.num_params)]for rows in range(self.num_intervals)]
+		P = [[0 for columns in range(self.num_params)]for rows in range(self.num_intervals)]
+		for j in range(self.num_intervals):
+			for k in range(self.num_params):
+				Pinp[j][k] = np.linspace(self.inf_val[4*j + k + self.num_intervals], self.sup_val[4*j + k + self.num_intervals], abs(self.sup_val[4*j + k + self.num_intervals] - self.inf_val[4*j + k + self.num_intervals]) + 1)
+				if k in range(1,3): # Suposing this distribution of inversely proportional relation (generalize)
+					P[j][k] = (max(I[j]) - self.stream_data)*(max(Pinp[j][k]) - min(Pinp[j][k]))/(max(I[j]) - min(I[j])) + min(Pinp[j][k])
+				else:
+					P[j][k] = (self.stream_data - min(I[j]))*(max(Pinp[j][k]) - min(Pinp[j][k]))/(max(I[j]) - min(I[j])) + min(Pinp[j][k])
+		print "Pinp:", Pinp
+		P = np.matrix.round(np.array(P)) #Round floats to the closest int
+		print "P:", P
+	# Select the output depending on the interval
+
+		ip,s = divmod(self.stream_data*10, 1) # Suposing stream_data is a float with one decimal (generalize)
+		
+		if ip in range(1, 4): # Suposing there is three intervals (generalize)
+			Pout = np.array(P[0,:]).tolist()
+			print "Interval 1"
+		elif ip in range(4, 8):
+			Pout = np.array(P[1,:]).tolist()
+			print "Interval 2"
+		else:
+			Pout = np.array(P[2,:]).tolist() 
+			print "Interval 3"
+		return Pout
+
+
+
+	
+
+

@@ -1,0 +1,8 @@
+prefix=/home/m/catkin_ws/install
+
+Name: nlu
+Description: Description of nlu
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/m/catkin_ws/install/lib 
+Requires: 

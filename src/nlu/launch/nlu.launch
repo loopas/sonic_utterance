@@ -1,0 +1,15 @@
+ <launch>
+
+	<node pkg="nlu" type="socket_node" name="socket_node" 
+	output="screen"/>
+	
+	<node pkg="nlu" type="aroval_node" name="aroval_node" 
+	output="screen"/>
+	
+	<node pkg="nlu" type="controller_node" name="controller_node" 
+	output="screen"/>
+	
+	<node pkg="nlu" type="effector_node" name="effector_node" 
+	output="screen"/>
+
+ </launch>

@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+import rospy, vocal
+import numpy as np
+from nlu.msg import midi, midiNote, midiCC
+from std_msgs.msg import Float32
+
+class Controller():
+    def __init__(self, stream_data, pub, mid):
+       self.stream_data = stream_data
+       self.pub = pub
+       self.mid = mid
+
+    def callback(self, data):
+        rospy.loginfo("%f", data.data)
+        self.stream_data = data.data
+        set_range()
+        self.pub.publish(mid) # Publishes the values to the 'link' topic
+
+    def main(self):
+        rospy.init_node('controller', anonymous=True)
+        rospy.Subscriber("stream", Float32, callback) #Listening from the aro/val node
+        self.mid = midi()
+        self.pub = rospy.Publisher('link', midi, queue_size=10) #Publishing the topic 'link'
+        rospy.loginfo(self.mid) # Prints the msgs to screen, and writes them to the Node's log file and to rosout
+        rate = rospy.Rate(1) # 1hz
+        rospy.spin()
+    if __name__ == '__main__':
+        try:
+            main(self)
+        except rospy.ROSInterruptException:
+            pass
+
+  # Construct the control method
+    def set_range(self):
+        rangelaugh = vocal.Rangeparams(self.stream_data, 3, 4, [0.1, 0.4, 0.8, 0, 127, 127, 0, 43, 79, 85, 39, 85, 15, 42, 89], [0.3, 0.7, 1, 42, 80, 86, 38, 84,16, 43, 88, 127, 0, 0, 127])
+        print vocal.Rangeparams(self.stream_data, 3, 4, [0.1, 0.4, 0.8, 0, 127, 127, 0, 43, 79, 85, 39, 85, 15, 42, 89], [0.3, 0.7, 1, 42, 80, 86, 38, 84,16, 43, 88, 127, 0, 0, 127]).get_Pout()
+
+   
+	# Defining vocalizations
+
+        laugh_chan = [0,1,2,3,5,6]
+        laugh_cont = [12,12,12,12,12,12]
+        laugh_val = rangelaugh
+        voc = vocal.Value('LAUGH',2,2,2,laugh_chan,laugh_cont,laugh_val)
+
+  # Asigning values to the msg variables
+
+        self.mid.vocal = voc.name
+        self.mid.note.channel = voc.notechannel
+        self.mid.note.note = voc.notenote
+        self.mid.note.velocity = voc.notevelocity
+        self.mid.control.channel = voc.ccchannel
+        self.mid.control.control = voc.cccontrol
+        self.mid.control.value = voc.ccvalue
+
+
+
+
+

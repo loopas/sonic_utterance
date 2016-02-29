@@ -1,0 +1,5 @@
+uint8    event
+float32    frecquency
+uint8    number_killed
+uint8    time_stamp
+unit8    vida 

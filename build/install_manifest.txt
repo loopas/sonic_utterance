@@ -1,0 +1,10 @@
+/home/m/catkin_ws/install/_setup_util.py
+/home/m/catkin_ws/install/env.sh
+/home/m/catkin_ws/install/setup.bash
+/home/m/catkin_ws/install/setup.sh
+/home/m/catkin_ws/install/setup.zsh
+/home/m/catkin_ws/install/.rosinstall
+/home/m/catkin_ws/install/lib/pkgconfig/nlu.pc
+/home/m/catkin_ws/install/share/nlu/cmake/nluConfig.cmake
+/home/m/catkin_ws/install/share/nlu/cmake/nluConfig-version.cmake
+/home/m/catkin_ws/install/share/nlu/package.xml
